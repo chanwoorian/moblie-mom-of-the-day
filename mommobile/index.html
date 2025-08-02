@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>금일의 엄마상 - 우리 엄마 이혜원!</title>
     <style>
         /* 기본 스타일 */
@@ -17,6 +17,7 @@
             min-height: 100vh;
             position: relative;
             background-image: linear-gradient(to bottom, #d00000, #800000);
+            touch-action: manipulation; /* 모바일 더블탭 줌 방지 */
         }
 
         /* 커튼 효과 */
@@ -26,7 +27,7 @@
             background-color: #ffda44;
             border: 15px solid #ccaa00;
             box-shadow: 0 0 70px rgba(255, 215, 0, 0.7);
-            padding: 50px;
+            padding: 30px 20px;
             text-align: center;
             border-radius: 20px;
             position: relative;
@@ -35,35 +36,36 @@
         }
 
         h1 {
-            font-size: 4em;
+            font-size: 3.5em;
             color: #8b0000;
-            text-shadow: 4px 4px 0 #ccaa00, 6px 6px 0 #ccaa00, 8px 8px 0 rgba(0,0,0,0.5);
+            text-shadow: 4px 4px 0 #ccaa00, 6px 6px 0 rgba(0,0,0,0.5);
             margin-bottom: 10px;
             font-weight: bold;
-            letter-spacing: 2px;
+            letter-spacing: 1px;
         }
         
         h2 {
-            font-size: 3.5em;
+            font-size: 3em;
             color: #8b0000;
-            text-shadow: 3px 3px 0 #ccaa00, 5px 5px 0 rgba(0,0,0,0.5);
-            margin-top: 10px;
+            text-shadow: 3px 3px 0 #ccaa00, 4px 4px 0 rgba(0,0,0,0.5);
+            margin-top: 5px;
+            margin-bottom: 10px;
             font-weight: bold;
         }
 
         .subtitle {
-            font-size: 1.5em;
+            font-size: 1.3em;
             color: #550000;
             font-style: italic;
-            margin-top: 20px;
+            margin-top: 15px;
             text-shadow: 1px 1px 0 #ffef96;
         }
 
-        /* 폭죽 스타일 (폭죽 파편) */
+        /* 폭죽 스타일 */
         .firework {
             position: absolute;
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             background-color: #fff;
             border-radius: 50%;
             opacity: 0;
@@ -74,6 +76,59 @@
         @keyframes firework-explosion {
             0% { opacity: 1; transform: scale(1); }
             100% { opacity: 0; transform: scale(0) translate(-100px, -100px); }
+        }
+
+        /* 모바일 최적화 */
+        @media (max-width: 768px) {
+            .curtain-wrapper {
+                width: 85%;
+                padding: 25px 15px;
+                border-width: 10px;
+            }
+
+            h1 {
+                font-size: 2.5em;
+                text-shadow: 3px 3px 0 #ccaa00, 4px 4px 0 rgba(0,0,0,0.5);
+            }
+            
+            h2 {
+                font-size: 2.2em;
+                text-shadow: 2px 2px 0 #ccaa00, 3px 3px 0 rgba(0,0,0,0.5);
+            }
+
+            .subtitle {
+                font-size: 1.1em;
+            }
+        }
+
+        /* 작은 모바일 화면 최적화 */
+        @media (max-width: 480px) {
+            .curtain-wrapper {
+                width: 90%;
+                padding: 20px 10px;
+                border-width: 8px;
+            }
+
+            h1 {
+                font-size: 2em;
+                text-shadow: 2px 2px 0 #ccaa00, 3px 3px 0 rgba(0,0,0,0.5);
+                margin-bottom: 5px;
+            }
+            
+            h2 {
+                font-size: 1.8em;
+                margin-top: 0;
+            }
+
+            .subtitle {
+                font-size: 1em;
+                margin-top: 10px;
+            }
+
+            .firework {
+                width: 8px;
+                height: 8px;
+            }
         }
     </style>
 </head>
@@ -88,41 +143,27 @@
         // 폭죽 효과 스크립트
         function createFirework(x, y) {
             const colors = ['#FFD700', '#FF4500', '#DAA520', '#ADFF2F', '#8A2BE2', '#40E0D0', '#FF00FF', '#FFA500', '#FF1493'];
-            for (let i = 0; i < 50; i++) {
+            const isMobile = window.innerWidth <= 768;
+            const particleCount = isMobile ? 30 : 50; // 모바일에선 파티클 수 줄임
+            
+            for (let i = 0; i < particleCount; i++) {
                 const firework = document.createElement('div');
                 firework.classList.add('firework');
                 firework.style.left = `${x}px`;
                 firework.style.top = `${y}px`;
                 firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-                const size = Math.random() * 10 + 5;
+                
+                const size = isMobile ? (Math.random() * 5 + 3) : (Math.random() * 10 + 5); // 모바일에선 작게
                 firework.style.width = `${size}px`;
                 firework.style.height = `${size}px`;
+                
                 document.body.appendChild(firework);
+
+                // 파편이 흩어지는 애니메이션
                 const angle = Math.random() * 2 * Math.PI;
-                const distance = Math.random() * 200 + 100;
+                const distance = isMobile ? (Math.random() * 100 + 50) : (Math.random() * 200 + 100); // 모바일에선 덜 퍼짐
                 const finalX = x + Math.cos(angle) * distance;
                 const finalY = y + Math.sin(angle) * distance;
                 const duration = Math.random() * 1 + 1;
-                firework.animate([
-                    { transform: `translate(0, 0) scale(1)`, opacity: 1 },
-                    { transform: `translate(${finalX - x}px, ${finalY - y}px) scale(0)`, opacity: 0 }
-                ], { duration: duration * 1000, easing: 'ease-out', fill: 'forwards' });
-                firework.addEventListener('animationend', () => { firework.remove(); });
-            }
-        }
-        function launchRandomFirework() {
-            const x = Math.random() * window.innerWidth;
-            const y = Math.random() * window.innerHeight * 0.5;
-            createFirework(x, y);
-        }
-        setTimeout(() => { setInterval(launchRandomFirework, 500); }, 200);
-        window.onload = function() {
-            for(let i=0; i<5; i++) {
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight * 0.4;
-                createFirework(x, y);
-            }
-        };
-    </script>
-</body>
-</html>
+
+                firework.animate
