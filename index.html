@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>금일의 엄마상 - 우리 엄마 이혜원!</title>
+    <style>
+        /* 기본 스타일 */
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            background-color: #a00000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            background-image: linear-gradient(to bottom, #d00000, #800000);
+        }
+
+        /* 커튼 효과 */
+        .curtain-wrapper {
+            width: 90%;
+            max-width: 800px;
+            background-color: #ffda44;
+            border: 15px solid #ccaa00;
+            box-shadow: 0 0 70px rgba(255, 215, 0, 0.7);
+            padding: 50px;
+            text-align: center;
+            border-radius: 20px;
+            position: relative;
+            z-index: 10;
+            background-image: linear-gradient(to top, #ffd700, #ffec8b);
+        }
+
+        h1 {
+            font-size: 4em;
+            color: #8b0000;
+            text-shadow: 4px 4px 0 #ccaa00, 6px 6px 0 #ccaa00, 8px 8px 0 rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+        
+        h2 {
+            font-size: 3.5em;
+            color: #8b0000;
+            text-shadow: 3px 3px 0 #ccaa00, 5px 5px 0 rgba(0,0,0,0.5);
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            color: #550000;
+            font-style: italic;
+            margin-top: 20px;
+            text-shadow: 1px 1px 0 #ffef96;
+        }
+
+        /* 폭죽 스타일 (폭죽 파편) */
+        .firework {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: firework-explosion 1.5s forwards;
+            z-index: 5;
+        }
+
+        @keyframes firework-explosion {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0) translate(-100px, -100px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="curtain-wrapper" id="stage">
+        <h1>금일의 엄마상</h1>
+        <h2>✨ 엄마 이혜원 ✨</h2>
+        <p class="subtitle">세상에서 가장 사랑하는 우리 엄마!</p>
+    </div>
+
+    <script>
+        // 폭죽 효과 스크립트
+        function createFirework(x, y) {
+            const colors = ['#FFD700', '#FF4500', '#DAA520', '#ADFF2F', '#8A2BE2', '#40E0D0', '#FF00FF', '#FFA500', '#FF1493'];
+            for (let i = 0; i < 50; i++) {
+                const firework = document.createElement('div');
+                firework.classList.add('firework');
+                firework.style.left = `${x}px`;
+                firework.style.top = `${y}px`;
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                const size = Math.random() * 10 + 5;
+                firework.style.width = `${size}px`;
+                firework.style.height = `${size}px`;
+                document.body.appendChild(firework);
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 200 + 100;
+                const finalX = x + Math.cos(angle) * distance;
+                const finalY = y + Math.sin(angle) * distance;
+                const duration = Math.random() * 1 + 1;
+                firework.animate([
+                    { transform: `translate(0, 0) scale(1)`, opacity: 1 },
+                    { transform: `translate(${finalX - x}px, ${finalY - y}px) scale(0)`, opacity: 0 }
+                ], { duration: duration * 1000, easing: 'ease-out', fill: 'forwards' });
+                firework.addEventListener('animationend', () => { firework.remove(); });
+            }
+        }
+        function launchRandomFirework() {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight * 0.5;
+            createFirework(x, y);
+        }
+        setTimeout(() => { setInterval(launchRandomFirework, 500); }, 200);
+        window.onload = function() {
+            for(let i=0; i<5; i++) {
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight * 0.4;
+                createFirework(x, y);
+            }
+        };
+    </script>
+</body>
+</html>
